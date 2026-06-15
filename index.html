@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>camera page</title>
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: white;
+      font-family: sans-serif;
+    }
+
+    #startScreen {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: white;
+      z-index: 2;
+    }
+
+    #startBtn {
+      padding: 16px 24px;
+      font-size: 20px;
+      border: none;
+      border-radius: 12px;
+      background: #111;
+      color: white;
+      cursor: pointer;
+    }
+
+    #camera {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      background: black;
+      display: none;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="startScreen">
+    <button id="startBtn">이상한거 나옴 주의</button>
+  </div>
+
+  <video id="camera" autoplay playsinline muted></video>
+
+  <script>
+    const startBtn = document.getElementById('startBtn');
+    const startScreen = document.getElementById('startScreen');
+    const camera = document.getElementById('camera');
+
+    startBtn.addEventListener('click', async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        camera.srcObject = stream;
+        camera.style.display = 'block';
+        startScreen.style.display = 'none';
+        document.body.style.background = 'black';
+
+        if (camera.requestFullscreen) {
+          await camera.requestFullscreen().catch(() => {});
+        }
+      } catch (err) {
+        alert('카메라 권한이 필요해요.');
+      }
+    });
+  </script>
+</body>
+</html>
